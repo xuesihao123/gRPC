@@ -4,7 +4,7 @@ import (
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"Drink/model"
+	"gRPC/model"
 	"strings"
 	"time"
  	"github.com/dgrijalva/jwt-go"
@@ -20,6 +20,9 @@ var MySecret = []byte("HMAC-SHA256")
 type MyClaims struct {
 	Username string `json:"username"`
 	ID int `json:"id"`
+	UserStatus int `json:"user_status"`
+	UserPid string `json:"user_pid"`
+	UserEmail string `json:"user_email"`
 	jwt.StandardClaims
 }
 
@@ -28,6 +31,9 @@ func GenToken(user models.User) (string, error) {
 	c := MyClaims{
 		user.UserName, // 自定义字段
 		user.UserId,
+		user.UserStatus,
+		user.UserPid,
+		user.UserEmail,
 		jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(TokenExpireDuration).Unix(), // 过期时间
 			Issuer:    "my-project",                               // 签发人

@@ -14,6 +14,10 @@ import (
 func main() {
 	lis, err := net.Listen("tcp", ":50051")
 	dao.InitMysql()
+	err = dao.InitRedis()
+	if err != nil {
+		panic(err)
+	}
 	dao.Db.Set("gorm:table_options","ENGINE = InnoDB").AutoMigrate(models.User{})
 	dao.Db.Set("gorm:table_options","ENGINE = InnoDB").AutoMigrate(models.Order{})
 	dao.Db.Set("gorm:table_options","ENGINE = InnoDB").AutoMigrate(models.Oh{})
@@ -34,6 +38,7 @@ func main() {
 	pb.RegisterMenuServer(s, &proto.MenuServer{})
 	pb.RegisterFoodServer(s, &proto.FoodServer{})
 	pb.RegisterHavingServer(s, &proto.HavingServer{})
+	pb.RegisterTokenServer(s, &proto.TokenServer{})
 
 	// Register reflection service on gRPC server.
 	reflection.Register(s)

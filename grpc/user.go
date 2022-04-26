@@ -1,10 +1,15 @@
 package grpc
 
 import (
+	"fmt"
+	"gRPC/dao"
 	errorD "gRPC/errors"
 	models "gRPC/model"
 	pb "gRPC/protos"
+	"gRPC/service"
 	"golang.org/x/net/context"
+	"strconv"
+	"time"
 )
 
 // server is used to implement helloworld.GreeterServer.
@@ -17,17 +22,31 @@ func (s *UserServer) UserIndex(ctx context.Context, in *pb.UserIndexRequest) (*p
 			UserName:     in.UserName,
 			UserPassword: in.UserPassword,
 		}
-		err , _ := models.GetNameAndPassword(UserReq)
+		err , U := models.GetNameAndPassword(UserReq)
 		if err != nil {
 			Resp := &pb.UserIndexResponse{
 				Err: errorD.Fail,
 				Msg: "失败",
+
 			}
+			//GenToken
 			return Resp , err
 		}
+		Token,_ := service.GenToken(*UserReq)
 		Resp := &pb.UserIndexResponse{
 			Err: errorD.Success,
 			Msg: "成功",
+			Data: &pb.UserData{
+				UserId:     int32(UserReq.UserId),
+				UserStatus: 1,
+				UserName:   UserReq.UserName,
+				Token:      Token,
+				UserPid:    UserReq.UserPid,
+			},
+		}
+		errR := dao.RDb.Set(ctx,strconv.Itoa(U.UserId),"Index",time.Minute*10).Err()
+		if errR != nil {
+			fmt.Println(errR)
 		}
 		return Resp,nil
 	}
@@ -37,7 +56,7 @@ func (s *UserServer) UserIndex(ctx context.Context, in *pb.UserIndexRequest) (*p
 			UserEmail:    in.UserEmail,
 			UserPassword: in.UserPassword,
 		}
-		err , _ := models.GetEmailAndPassword(UserReq)
+		err , U := models.GetEmailAndPassword(UserReq)
 		if err != nil {
 			Resp := &pb.UserIndexResponse{
 				Err: errorD.Fail,
@@ -49,6 +68,7 @@ func (s *UserServer) UserIndex(ctx context.Context, in *pb.UserIndexRequest) (*p
 			Err: errorD.Success,
 			Msg: "成功",
 		}
+		dao.RDb.Set(ctx,strconv.Itoa(U.UserId),"Index",time.Minute*10)
 		return Resp,nil
 	}
 
