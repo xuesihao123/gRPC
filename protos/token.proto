@@ -1,0 +1,26 @@
+syntax = "proto3";
+// user 包
+package user;
+// 指定 go 的包路径及包名
+option go_package="drink/user";
+// option php_namespace="App\\Services";
+// Token 服务及服务接口的定义
+
+service token {
+  rpc ParseToken(ParseTokenRequest) returns (ParseTokenResponse) {} //解析token
+}
+
+message ParseTokenRequest {
+  string token = 1; //token字符串
+}
+
+message ParseTokenResponse{
+  string user_name = 1;
+  int32 user_status = 2;
+  string user_email = 3;
+  int32 user_id = 4;
+  string user_pid = 5; //身份证号
+  int32 err = 6;
+  string msg = 7;
+  string flag = 8; //判断状态 Index:登录  false:未登录
+}

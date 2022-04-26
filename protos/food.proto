@@ -1,0 +1,60 @@
+//新增菜品
+//修改菜品
+//按条件查询菜品
+//删除菜品
+
+syntax = "proto3";
+// user 包
+package user;
+// 指定 go 的包路径及包名
+option go_package="drink/user";
+// option php_namespace="App\\Services";
+// 菜单 服务及服务接口的定义
+service food {
+  rpc CreateFood(CreateFoodRequest) returns (CreateFoodResponse) {} //新增菜品
+  rpc DeleteFood(DeleteFoodRequest) returns (DeleteFoodResponse) {} //删除菜品
+  rpc UpdateFood(UpdateFoodRequest) returns (UpdateFoodResponse) {} //修改菜品
+  rpc GetFood(GetFoodRequest) returns (GetFoodResponse) {} //按照条件查询
+}
+message Food{
+  int32 food_id = 1;
+  string food_name = 2;
+  float food_cw = 3;
+  float food_oil = 4;
+  float food_energy = 5;
+  float food_protein = 6;
+  string food_type = 7;
+}
+//今天需要写完dao层和grpc，后台controller和错误码分类
+message CreateFoodRequest {
+  repeated Food food_data = 1;
+}
+message CreateFoodResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message DeleteFoodRequest{
+  int32 food_id = 1;
+}
+message DeleteFoodResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message UpdateFoodRequest{
+  Food food = 1;
+}
+message UpdateFoodResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message GetFoodRequest{
+  int32 limit = 1; //每页多少
+  int32 page = 2; //页数
+  int32 having_id = 3; //菜品id
+  Food food = 4;
+}
+message GetFoodResponse{
+  int32 err = 1;
+  string msg = 2;
+  repeated Food food = 3;
+}

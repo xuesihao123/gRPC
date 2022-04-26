@@ -1,0 +1,94 @@
+//创建菜单
+//查询所有菜品
+//按照日期查询菜单
+//修改菜单
+syntax = "proto3";
+// user 包
+package user;
+// 指定 go 的包路径及包名
+option go_package="drink/menu";
+// option php_namespace="App\\Services";
+// 菜单 服务及服务接口的定义
+service menu {
+  rpc CreateMenu(CreateMenuRequest) returns (CreateMenuResponse) {} //创建每日菜单
+  rpc CreateOftenMenu(CreateOftenMenuRequest) returns(CreateOftenMenuResponse) {} //创建常用菜单
+  rpc DeleteMenu(DeleteMenuRequest) returns (DeleteMenuResponse) {} //删除常用菜单
+  rpc DeleteOftenMenu(DeleteOftenMenuRequest) returns (DeleteOftenMenuResponse) {} //删除常用菜单
+  rpc GetHavingFind(GetHavingFindRequest) returns (GetHavingFindResponse) {} //查询所有菜品
+  rpc GetMenuDate(GetMenuDateRequest) returns (GetMenuDateResponse) {} //按照日期查询菜单
+  rpc DeleteMenuToday(DeleteMenuTodayRequest) returns (DeleteMenuTodayResponse) {} //删除今日菜单的菜品
+}
+
+message CreateOftenMenuRequest{
+  repeated int32 having_ids = 1;
+}
+
+message CreateOftenMenuResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message CreateMenuRequest {
+  repeated int32 having_ids = 1;
+}
+
+message CreateMenuResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message DeleteMenuRequest {
+  repeated int32 having_ids = 1;
+  int32 menu_id = 2;
+}
+message DeleteMenuResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message DeleteOftenMenuRequest {
+  repeated int32 having_ids = 1;
+}
+message DeleteOftenMenuResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message HavingS{
+  int32 having_id = 1;
+  float having_price = 2;
+  string having_name = 3;
+  float having_cw = 4;
+  float having_oil = 5;
+  float having_energy = 6;
+  float having_protein = 7;
+  string having_update_time = 8;
+  string having_content = 9;
+}
+message GetHavingFindRequest {
+  int32 limit = 1; //每页多少
+  int32 page = 2; //页数
+}
+message GetHavingFindResponse {
+  int32 err = 1;
+  string msg = 2;
+  repeated HavingS having_data = 3;
+}
+message GetMenuDateRequest {
+  string create_date = 1;
+  int32 limit = 2; //每页多少
+  int32 page = 3; //页数
+}
+message GetMenuDateResponse {
+  int32 err = 1;
+  string msg = 2;
+  repeated HavingS having_data = 3;
+}
+message DeleteMenuTodayRequest {
+  string create_date = 1;
+  repeated int32 having_ids = 2;
+}
+message DeleteMenuTodayResponse {
+  int32 err = 1;
+  string msg = 2;
+}

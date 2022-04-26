@@ -1,0 +1,116 @@
+syntax = "proto3";
+// user 包
+package user;
+// 指定 go 的包路径及包名
+option go_package="drink/user";
+// option php_namespace="App\\Services";
+// User 服务及服务接口的定义
+
+service User {
+  rpc UserIndex(UserIndexRequest) returns (UserIndexResponse) {} //用户登录
+//  rpc UserView(UserViewRequest) returns (UserViewResponse) {} //查询用户
+  rpc UserUpdate(UserUpdateRequest) returns (UserUpdateResponse) {} //修改用户信息,暂时不写
+  rpc UserDelete(UserDeleteRequest) returns (UserDeleteResponse) {} //删除用户
+  rpc UserRegister(UserRegisterRequest) returns (UserRegisterResponse) {} //用户注册
+  rpc UserGet(UserGetRequest) returns (UserGetResponse) {} //按条件查询
+}
+
+// 枚举类型
+enum EnumUserSex {
+  SEX_INIT = 0; // 枚举类型必须以 0 起始
+  SEX_MALE = 1;
+  SEX_FEMALE = 2;
+}
+
+// 用户实体模型
+message UserEntity {
+  string user_name = 1;
+  int32 user_status = 2;
+  string user_email = 3;
+  int32 user_id = 4;
+  string user_pid = 5; //身份证号
+}
+
+// User 服务的各个接口的请求/响应结构
+
+//用户登录
+message UserIndexRequest {
+  string user_name = 1; //用户名
+  string user_email = 2; //邮箱，用户名和邮箱二选一
+  string user_password = 3; //用户密码
+}
+message UserData{
+  int32 user_id = 1;
+  int32 user_status = 2;
+  string user_name = 3;
+  string token = 4;
+  string user_pid = 5;
+}
+
+message UserIndexResponse {
+  int32 err = 1;
+  string msg = 2;
+  UserData data = 3;
+}
+
+message UserViewRequest {
+  string user_name = 1; //用户名
+  string user_email = 2; //邮箱，用户名和邮箱二选一
+  int32 user_status = 3;
+}
+
+message UserViewResponse {
+  int32 err = 1;
+  string msg = 2;
+  // 返回一个 UserEntity 对象
+  repeated UserEntity data = 3;
+}
+
+message UserUpdateRequest {
+  int32 user_id = 1;
+  string user_password = 2;
+  int32 user_status = 3;
+}
+
+message UserUpdateResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message UserDeleteRequest {
+  int32 user_id = 1;
+}
+
+message UserDeleteResponse {
+  int32 err = 1;
+  string msg = 2;
+}
+
+message UserRegisterRequest{
+  string user_name = 1;
+  string user_email = 2;
+  string user_password = 3;
+  string user_session_id = 4;  //发送给邮件的验证码
+  string user_pid = 5; //身份证信息
+}
+
+message UserRegisterResponse{
+  int32 err = 1;
+  string msg = 2;
+  UserData data = 3;
+}
+
+message UserGetRequest{
+  string user_name = 1;
+  string user_email = 2;
+  int32 user_status = 3;
+  int32 limit = 4; //每页多少
+  int32 page = 5; //页数
+}
+
+message UserGetResponse{
+  int32 err = 1;
+  string msg = 2;
+  // 返回一组UserEntity 对象
+  repeated UserEntity data = 3;
+}

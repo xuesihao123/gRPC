@@ -1,0 +1,79 @@
+//新增菜品
+//修改菜品
+//按条件查询菜品
+//删除菜品
+
+syntax = "proto3";
+// user 包
+package user;
+// 指定 go 的包路径及包名
+option go_package="drink/user";
+// option php_namespace="App\\Services";
+// 菜单 服务及服务接口的定义
+service having {
+  rpc CreateHaving(CreateHavingRequest) returns (CreateHavingResponse) {} //新增菜品
+  rpc DeleteHaving(DeleteHavingRequest) returns (DeleteHavingResponse) {} //删除菜品
+  rpc UpdateHaving(UpdateHavingRequest) returns (UpdateHavingResponse) {} //修改菜品
+  rpc GetHaving(GetHavingRequest) returns (GetHavingResponse) {} //按照条件查询
+  rpc GetOrderHaving(GetOrderHavingRequest) returns (GetOrderHavingResponse) {}//查询订单菜品
+}
+message Having{
+  int32 having_id = 1;
+  float having_price = 2; //价格
+  string having_name = 3; //菜品
+  float having_cw = 4;
+  float having_oil = 5;
+  float having_energy = 6;
+  float having_protein = 7;
+  string having_update_time = 8;
+  string having_content = 9;
+}
+message FH{
+  int32 food_id = 1;
+  float food_weight = 2;
+}
+
+
+//今天需要写完dao层和grpc，后台controller和错误码分类
+message CreateHavingRequest {
+   Having having_data = 1;
+   repeated FH foods = 2;
+}
+message CreateHavingResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message DeleteHavingRequest{
+  int32 having_id = 1;
+}
+message DeleteHavingResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message UpdateHavingRequest{
+  repeated FH having = 1;
+  string status = 2;
+  int32 having_id = 3;
+}
+message UpdateHavingResponse{
+  int32 err = 1;
+  string msg = 2;
+}
+message GetHavingRequest{
+  int32 limit = 2; //每页多少
+  int32 page = 3; //页数
+  Having having = 1;
+}
+message GetHavingResponse{
+  int32 err = 1;
+  string msg = 2;
+  repeated Having having_data = 3;
+}
+message GetOrderHavingRequest{
+  int32 order_id = 1;
+}
+message GetOrderHavingResponse{
+  int32 err = 1;
+  string msg = 2;
+  repeated Having having_data = 3;
+}
